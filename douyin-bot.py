@@ -121,7 +121,7 @@ def main():
     while True:
         next_page()
 
-        time.sleep(1)
+        time.sleep(2)
         screenshot.pull_screenshot()
 
         resize_image('autojump.png', 'optimized.png', 1024*1024)
@@ -156,8 +156,9 @@ def main():
             # 是个美人儿~关注点赞走一波
             if beauty > BEAUTY_THRESHOLD and major_total > minor_total:
                 print('发现漂亮妹子！！！')
-                thumbs_up()
+                #thumbs_up()
                 follow_user()
+                print('关注了～～～')
 
         else:
             print(rsp)
