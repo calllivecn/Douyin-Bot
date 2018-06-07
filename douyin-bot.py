@@ -34,10 +34,10 @@ adb.test_device()
 config = config.open_accordant_config()
 
 # 审美标准
-BEAUTY_THRESHOLD = 80
+BEAUTY_THRESHOLD = 90
 
 # 最小年龄
-GIRL_MIN_AGE = 18
+GIRL_MIN_AGE = 12
 
 
 def yes_or_no():
@@ -62,7 +62,7 @@ def _random_bias(num):
     :param num:
     :return:
     """
-    print('num = ', num)
+    #print('num = ', num)
     return random.randint(-num, num)
 
 
@@ -119,9 +119,8 @@ def main():
     screenshot.check_screenshot()
 
     while True:
-        next_page()
 
-        time.sleep(2)
+        time.sleep(1)
         screenshot.pull_screenshot()
 
         resize_image('autojump.png', 'optimized.png', 1024*1024)
@@ -138,9 +137,9 @@ def main():
         if rsp['ret'] == 0:
             beauty = 0
             for face in rsp['data']['face_list']:
-                print(face)
+                print('beauty:',face['beauty'],'age:',face['age'],'gender:',face['gender'])
                 face_area = (face['x'], face['y'], face['x']+face['width'], face['y']+face['height'])
-                print(face_area)
+                #print(face_area)
                 img = Image.open("optimized.png")
                 cropped_img = img.crop(face_area).convert('RGB')
                 cropped_img.save(FACE_PATH + face['face_id'] + '.png')
@@ -148,21 +147,22 @@ def main():
                 if face['beauty'] > beauty and face['gender'] < 50:
                     beauty = face['beauty']
 
-                if face['age'] > GIRL_MIN_AGE:
+                if face['age'] >= GIRL_MIN_AGE:
                     major_total += 1
                 else:
                     minor_total += 1
 
             # 是个美人儿~关注点赞走一波
-            if beauty > BEAUTY_THRESHOLD and major_total > minor_total:
+            if beauty >= BEAUTY_THRESHOLD and major_total > minor_total:
                 print('发现漂亮妹子！！！')
-                #thumbs_up()
-                follow_user()
                 print('关注了～～～')
+                thumbs_up()
+                follow_user()
 
         else:
             print(rsp)
-            continue
+
+        next_page()
 
 
 if __name__ == '__main__':
